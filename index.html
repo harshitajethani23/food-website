@@ -1,0 +1,91 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Diet Planner</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f7fb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      width: 350px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+    }
+    input, select, textarea, button {
+      width: 100%;
+      margin: 8px 0;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    .output {
+      margin-top: 15px;
+      padding: 10px;
+      background: #eef;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body><div class="container">
+  <h2>Diet Planner</h2>  <input type="number" id="age" placeholder="Enter Age">
+  <input type="number" id="weight" placeholder="Enter Weight (kg)">  <select id="goal">
+    <option value="gain">Weight Gain</option>
+    <option value="loss">Weight Loss</option>
+    <option value="healthy">Healthy Lifestyle</option>
+    <option value="disease">Disease Based Food</option>
+  </select>  <select id="food_type">
+    <option value="Veg">Veg</option>
+    <option value="Non-veg">Non-veg</option>
+    <option value="Both">Both/Vegan</option>
+  </select>  <textarea id="allergies" placeholder="Enter Allergies"></textarea>  <textarea id="health" placeholder="Enter Health Issues"></textarea><button onclick="submitData()">Get Suggestion</button>
+
+  <div class="output" id="result"></div>
+</div><script>
+function submitData() {
+  const data = {
+    age: document.getElementById("age").value,
+    weight: document.getElementById("weight").value,
+    goal: document.getElementById("goal").value,
+    food_type: document.getElementById("food_type").value,
+    allergies: document.getElementById("allergies").value,
+    health_issues: document.getElementById("health").value
+  };
+
+  fetch("http://127.0.0.1:5000/aiml-diet", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  })
+  .then(response => response.json())
+  .then(result => {
+    document.getElementById("result").innerHTML = 
+      "<b>Suggestion:</b> " + result.AI_Suggestion + "<br><br>" +
+      "<b>Motivation:</b> " + result.Motivation;
+  })
+  .catch(error => {
+    document.getElementById("result").innerHTML = "Error connecting to backend";
+  });
+}
+</script></body>
+</html>
